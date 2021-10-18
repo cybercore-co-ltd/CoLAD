@@ -21,7 +21,9 @@ model = dict(
             use_sigmoid=True,
             gamma=2.0,
             alpha=0.25,
-            loss_weight=1.0)))
+            loss_weight=1.0)),
+    # train and test cfg
+    test_cfg=dict(use_teacher=True))
 # dataset
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
