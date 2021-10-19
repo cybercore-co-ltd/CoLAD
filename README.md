@@ -139,7 +139,7 @@ Table 1 - Appendix: Compare different auxiliary predictions: IoU, Implicit Objec
 |                    |                    | :heavy_check_mark: | 36.9 ([config](configs/cop/paacopbase_r18_fpn_1x_coco.py) \| [model](http://118.69.233.170:60001/open/LAD_WACV22/paacopbase_r18_fpn_1x_coco/paacopbase_r18_fpn_1x_coco-3cb73ed9.pth) \| [log](http://118.69.233.170:60001/open/LAD_WACV22/paacopbase_r18_fpn_1x_coco/paacopbase_r18_fpn_1x_coco-3cb73ed9.log.json)) | 41.2 ([config](configs/cop/paacopbase_r50_fpn_1x_coco.py) \| [model](http://118.69.233.170:60001/open/LAD_WACV22/paacopbase_r50_fpn_1x_coco/paacopbase_r50_fpn_1x_coco-6f74865c.pth) \| [log](http://118.69.233.170:60001/open/LAD_WACV22/paacopbase_r50_fpn_1x_coco/paacopbase_r50_fpn_1x_coco-6f74865c.log.json))                                                      |
 
 ## Citation
-Please cite our paper as:
+Please cite the paper in your publications if it helps your research:
 ```
 @misc{nguyen2021improving,
       title={Improving Object Detection by Label Assignment Distillation}, 
