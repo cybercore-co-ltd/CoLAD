@@ -2,6 +2,9 @@
 
 This is the official implementation of the WACV 2022 paper [Improving Object Detection by Label Assignment Distillation](https://arxiv.org/abs/2108.10520). We provide the code for Label Assignement Distillation (LAD), training logs and several model checkpoints.
 
+## What's New
+- [May 18, 2022] release code for [SoLAD](configs/lad/paa_solad_r50_r101p1x_1x_coco.py) and [KDLoss](configs/kd/kd_r50_r101p1x_kl_i05_g05_1x_coco.py)
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Installation](#installation)
