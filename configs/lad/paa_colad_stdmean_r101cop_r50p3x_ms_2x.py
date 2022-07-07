@@ -41,6 +41,7 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
+# note: total bs = 16, we train CoLAD with 4 GPUS, so each GPU will have 4 samples
 data = dict(samples_per_gpu=4,
             workers_per_gpu=4,
             train=dict(pipeline=train_pipeline))
