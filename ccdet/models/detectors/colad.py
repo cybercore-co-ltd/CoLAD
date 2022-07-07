@@ -61,7 +61,59 @@ class CoLAD(SingleStageDetector):
                       gt_bboxes,
                       gt_labels,
                       gt_bboxes_ignore=None):
-        raise NotImplementedError
+        super(SingleStageDetector, self).forward_train(img, img_metas)
+
+        # forward student
+        x = self.extract_feat(img)
+        outs = self.bbox_head(x)
+        (pos_losses_list, anchor_list, labels, labels_weight,
+            bboxes_target, bboxes_weight, _, pos_inds, pos_gt_index) = \
+            self.bbox_head._get_loss_la(*outs,
+                                        gt_bboxes,
+                                        gt_labels,
+                                        img_metas,
+                                        gt_bboxes_ignore)
+
+        # fordward teacher
+        x_teacher = self.extract_teacher_feat(img)
+        outs_teacher = self.teacher_bbox_head(x_teacher)
+        t_pos_losses_list = \
+            self.teacher_bbox_head._get_loss_la(*outs_teacher,
+                                                gt_bboxes,
+                                                gt_labels,
+                                                img_metas,
+                                                gt_bboxes_ignore)[0]
+
+        # perform label assignment for both student and teacher
+        (labels, labels_weight, bboxes_target, bboxes_weight,
+         pos_inds_flatten, pos_anchors, num_pos, dynamic_statistics) = \
+            self.teacher_bbox_head._label_reassign(pos_losses_list,
+                                                   t_pos_losses_list,
+                                                   anchor_list,
+                                                   labels,
+                                                   labels_weight,
+                                                   bboxes_target,
+                                                   bboxes_weight,
+                                                   pos_inds,
+                                                   pos_gt_index)
+        la_results = (labels, labels_weight, bboxes_target, bboxes_weight,
+                      pos_inds_flatten, pos_anchors, num_pos)
+
+        # compute student loss based on the assignment results
+        losses = self.bbox_head.forward_train_wo_la(
+            outs, img_metas, gt_bboxes, gt_labels,
+            gt_bboxes_ignore=gt_bboxes_ignore, la_results=la_results)
+
+        # compute teacher loss based on the assignment results
+        losses_teacher = self.teacher_bbox_head.forward_train_wo_la(
+            outs_teacher, img_metas, gt_bboxes, gt_labels,
+            gt_bboxes_ignore=gt_bboxes_ignore, la_results=la_results)
+
+        for key, val in losses_teacher.items():
+            losses[key+'_t'] = val
+
+        losses.update(dynamic_statistics)
+        return losses
 
     def simple_test(self, img, img_metas, rescale=False):
         # use teacher
